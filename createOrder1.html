@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | Create Order</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100">
+    <div class="flex min-h-screen flex-col md:flex-row">
+      <!-- Sidebar -->
+      <aside class="w-full border-r bg-white md:w-64">
+        <div class="flex h-14 items-center justify-between border-b px-4">
+          <a href="/" class="flex items-center gap-2 font-semibold">
+            <img src="assest/img/african logo.jpg" alt="" class="" />
+          </a>
+          <button
+            data-drawer-target="default-sidebar"
+            data-drawer-toggle="default-sidebar"
+            aria-controls="default-sidebar"
+            type="button"
+            class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 cusor-pointer"
+          >
+            <span class="sr-only">Open sidebar</span>
+            <svg
+              class="w-6 h-6"
+              aria-hidden="true"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                fill-rule="evenodd"
+                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <aside
+          id="default-sidebar"
+          class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 lg:hidden"
+          aria-label="Sidebar"
+        >
+          <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50">
+            <nav class="space-y-1.5 p-4 lg:hidden">
+              <a
+                href="./index.html"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                <i class="ri-home-line"></i>
+                Dashboard
+              </a>
+              <a
+                href="./orders-list.html"
+                class="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900"
+              >
+                <i class="ri-shopping-bag-line"></i>
+                Orders
+              </a>
+              <div class="relative">
+                <button
+                  class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+                  onclick="toggleDropdown()"
+                >
+                  <i class="ri-gift-line"></i>
+                  Products
+                  <i
+                    class="ri-arrow-down-s-line ml-auto transition-transform duration-200"
+                    id="dropdownArrow"
+                  ></i>
+                </button>
+                <div class="hidden space-y-1.5 pl-8" id="productsDropdown">
+                  <a
+                    href="./product-list.html"
+                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+                  >
+                    Product List
+                  </a>
+                  <a
+                    href="./add-product.html"
+                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+                  >
+                    Add Product
+                  </a>
+                </div>
+              </div>
+              <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                <i class="ri-settings-line"></i>
+                Settings
+              </a>
+            </nav>
+          </div>
+        </aside>
+
+        <nav class="space-y-1.5 p-4 hidden lg:block">
+          <a
+            href="./index.html"
+            class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+          >
+            <i class="ri-home-line"></i>
+            Dashboard
+          </a>
+          <a
+            href="./orders-list.html"
+            class="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900"
+          >
+            <i class="ri-shopping-bag-line"></i>
+            Orders
+          </a>
+          <div class="relative">
+            <button
+              class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              onclick="toggleDropdown2()"
+            >
+              <i class="ri-gift-line"></i>
+              Products
+              <i
+                class="ri-arrow-down-s-line ml-auto transition-transform duration-200"
+                id="dropdownArrow2"
+              ></i>
+            </button>
+            <div class="hidden space-y-1.5 pl-8" id="productsDropdown2">
+              <a
+                href="./product-list.html"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                Product List
+              </a>
+              <a
+                href="./add-product.html"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                Add Product
+              </a>
+            </div>
+          </div>
+          <a
+            href="#"
+            class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+          >
+            <i class="ri-settings-line"></i>
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1">
+        <!-- Header -->
+        <header
+          class="flex h-14 items-center justify-between border-b bg-white px-4 lg:px-8"
+        >
+          <h2 class="font-semibold hidden lg:flex">Create Order</h2>
+          <form class="flex-1 sm:flex-initial">
+            <div class="relative">
+              <input
+                type="search"
+                placeholder="Search by keywords..."
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:w-[300px]"
+              />
+              <button
+                type="submit"
+                class="absolute inset-y-0 right-0 flex items-center px-2"
+              >
+                <i class="ri-search-line text-gray-400"></i>
+              </button>
+            </div>
+          </form>
+          <button class="rounded-full p-1 hover:bg-gray-100">
+            <img
+              src="assest/img/avatar1.jpg"
+              alt="Avatar"
+              class="h-8 w-8 rounded-full"
+            />
+          </button>
+        </header>
+
+        <div class="p-6">
+          <h1 class="text-2xl font-semibold mb-6">Create New Order</h1>
+
+          <!-- Order Form -->
+          <form
+            id="orderForm"
+            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          >
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="orderDetails"
+              >
+                Order Details
+              </label>
+              <textarea
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="orderDetails"
+                placeholder="Enter order details"
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="amountPaid"
+              >
+                Amount Paid
+              </label>
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="amountPaid"
+                type="number"
+                placeholder="Enter amount paid"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="paymentMethod"
+              >
+                Payment Method
+              </label>
+              <select
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="paymentMethod"
+              >
+                <option value="cash">Cash</option>
+                <option value="transfer">Transfer</option>
+                <option value="card">Card</option>
+              </select>
+            </div>
+            <div class="mb-6">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="orderStatus"
+              >
+                Order Status
+              </label>
+              <select
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="orderStatus"
+              >
+                <option value="pending">Pending</option>
+                <option value="successful">Successful</option>
+                <option value="failed">Failed</option>
+              </select>
+            </div>
+            <div class="flex items-center justify-between">
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Create Order
+              </button>
+            </div>
+          </form>
+
+          <!-- Orders List -->
+          <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-xl font-semibold mb-4">Orders List</h2>
+            <div class="overflow-x-auto">
+              <table class="min-w-full leading-normal">
+                <thead>
+                  <tr>
+                    <th
+                      class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                    >
+                      Order Details
+                    </th>
+                    <th
+                      class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                    >
+                      Amount Paid
+                    </th>
+                    <th
+                      class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                    >
+                      Payment Method
+                    </th>
+                    <th
+                      class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                    >
+                      Order Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="ordersList">
+                  <!-- Orders will be dynamically inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script>
+      function toggleDropdown() {
+        const dropdown = document.getElementById("productsDropdown");
+        const arrow = document.getElementById("dropdownArrow");
+        dropdown.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-180");
+      }
+
+      function toggleDropdown2() {
+        const dropdown = document.getElementById("productsDropdown2");
+        const arrow = document.getElementById("dropdownArrow2");
+        dropdown.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-180");
+      }
+
+      // Order management
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+      document
+        .getElementById("orderForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const orderDetails = document.getElementById("orderDetails").value;
+          const amountPaid = document.getElementById("amountPaid").value;
+          const paymentMethod = document.getElementById("paymentMethod").value;
+          const orderStatus = document.getElementById("orderStatus").value;
+
+          const newOrder = {
+            orderDetails,
+            amountPaid,
+            paymentMethod,
+            orderStatus,
+          };
+
+          orders.push(newOrder);
+          localStorage.setItem("orders", JSON.stringify(orders));
+          renderOrders();
+          this.reset();
+        });
+
+      function renderOrders() {
+        const ordersList = document.getElementById("ordersList");
+        ordersList.innerHTML = "";
+        orders.forEach((order) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p class="text-gray-900 whitespace-no-wrap">${order.orderDetails}</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p class="text-gray-900 whitespace-no-wrap">$${order.amountPaid}</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p class="text-gray-900 whitespace-no-wrap">${order.paymentMethod}</p>
+                    </td>
+                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <p class="text-gray-900 whitespace-no-wrap">${order.orderStatus}</p>
+                    </td>
+                `;
+          ordersList.appendChild(row);
+        });
+      }
+
+      // Initial render of orders
+      renderOrders();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Login</title>
+
+    <style>
+      /* Global Styles */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .login-container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 350px;
+      }
+      /* Typography */
+      .text-dark-gray {
+        color: #333;
+      }
+      .text-red {
+        color: #e74c3c;
+      }
+      .fw-500 {
+        font-weight: 500;
+      }
+      /* Spacing */
+      .mb-10px {
+        margin-bottom: 10px;
+      }
+      .mb-20px {
+        margin-bottom: 20px;
+      }
+      /* Form Controls */
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      .bg-very-light-gray {
+        background: #f9f9f9;
+      }
+      /* Flex & Position Utilities */
+      .d-flex {
+        display: flex;
+      }
+      .align-items-center {
+        align-items: center;
+      }
+      .position-relative {
+        position: relative;
+      }
+      .text-start {
+        text-align: left;
+      }
+      .ms-auto {
+        margin-left: auto;
+      }
+      .text-decoration-line-bottom {
+        text-decoration: underline;
+      }
+      /* Button Styles */
+      .btn {
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+      .btn-medium {
+        padding: 12px 20px;
+      }
+      .btn-round-edge {
+        border-radius: 25px;
+      }
+      .btn-dark-gray {
+        background-color: #333;
+        color: #fff;
+      }
+      .btn-dark-gray:hover {
+        background-color: #555;
+      }
+      .btn-box-shadow {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .w-100 {
+        width: 100%;
+      }
+      /* Checkbox */
+      .check-box {
+        margin-right: 5px;
+      }
+      /* Form Results */
+      .form-results {
+        font-size: 14px;
+        color: #e74c3c;
+        margin-top: 20px;
+      }
+      .d-none {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <form action="#" method="post">
+        <label for="loginUsername" class="text-dark-gray mb-10px fw-500">
+          Username or email address <span class="text-red">*</span>
+        </label>
+        <input
+          class="mb-20px bg-very-light-gray form-control required"
+          type="email"
+          name="name"
+          id="loginUsername"
+          placeholder="Enter your username"
+        />
+
+        <label for="loginPassword" class="text-dark-gray mb-10px fw-500">
+          Password <span class="text-red">*</span>
+        </label>
+        <input
+          class="mb-20px bg-very-light-gray form-control required"
+          type="password"
+          name="password"
+          id="loginPassword"
+          placeholder="Enter your password"
+        />
+
+        <div
+          class="position-relative d-flex align-items-center text-start mb-20px"
+        >
+          <label>
+            <input
+              type="checkbox"
+              name="terms_condition"
+              id="terms_condition"
+              value="1"
+              class="check-box required"
+            />
+            <span class="fs-14">Remember me</span>
+          </label>
+        </div>
+
+        <input type="hidden" name="redirect" value="" />
+
+        <button
+          class="btn btn-medium btn-round-edge btn-dark-gray btn-box-shadow submit w-100"
+          id="loginButton"
+          type="submit"
+        >
+          Login
+        </button>
+        <div class="form-results d-none"></div>
+      </form>
+    </div>
+
+    <script src="/login.js"></script>
+  </body>
+</html>
