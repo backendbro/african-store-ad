@@ -26,8 +26,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     );
     const data = await res.json();
     foodItems = data.data.map((product) => product.name);
-    // Initialize food form (clears container; we will populate with order items later)
+    // Clear the food items list container
     document.getElementById("foodItemsList").innerHTML = "";
+    // Initialize the add-item functionality
+    initFoodForm();
   } catch (error) {
     console.error("Error fetching products:", error);
   }
@@ -47,6 +49,15 @@ document.addEventListener("DOMContentLoaded", async function () {
         <button type="button" class="remove-item bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Remove</button>
       `;
     return itemDiv;
+  }
+
+  // Function to attach event listener to the "Add Item" button
+  function initFoodForm() {
+    const addItemBtn = document.getElementById("addItemBtn");
+    addItemBtn.addEventListener("click", () => {
+      const foodItemsList = document.getElementById("foodItemsList");
+      foodItemsList.appendChild(createFoodItemElement());
+    });
   }
 
   // Fetch the order details from the backend and populate the form.
@@ -90,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // Remove food item element on clicking its remove button
+  // Remove food item element on clicking its remove button (event delegation)
   document
     .getElementById("foodItemsList")
     .addEventListener("click", function (e) {
@@ -135,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             order_items.push({ food_name, quantity, price });
           } else {
             Swal.fire({
-              title: "Update order",
+              title: "Update Order",
               text: "Please check your values and try again.",
               icon: "error",
               timer: 2000,
