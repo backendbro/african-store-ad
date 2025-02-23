@@ -5,22 +5,28 @@ document.addEventListener("DOMContentLoaded", async function () {
   let currentPage = 1;
   const limit = 10;
   let totalOrders = 0;
+  let currentFilter = ""; // if you need to support filtering export as well
 
+  // Fetch and render orders (existing code)
   async function fetchOrders(page, filter = "") {
     try {
-      const response = await fetch(
-        `https://african-store.onrender.com/api/v1/order/pagination?page=${page}&limit=${limit}&filter=${filter}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const url = new URL(
+        "https://african-store.onrender.com/api/v1/order/pagination"
       );
-      const data = await response.json();
-      totalOrders = data.totalOrders; // Assuming API returns total count
-      console.log(totalOrders);
+      url.searchParams.append("page", page);
+      url.searchParams.append("limit", limit);
+      if (filter) {
+        url.searchParams.append("filter", filter);
+      }
 
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      totalOrders = data.totalOrders;
       if (!data || !data.orders) {
         console.error("No orders found.");
         return;
@@ -28,7 +34,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // Clear existing rows
       tableBody.innerHTML = "";
-
       data.orders.forEach((order) => {
         const orderItems = order.order_items
           .slice(0, 2)
@@ -69,142 +74,132 @@ document.addEventListener("DOMContentLoaded", async function () {
                       ${order.order_status}
                   </span>
               </td>
-
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 relative">
-              <div class="flex gap-2 items-center relative">
-                  <button class="text-gray-400 hover:text-gray-600 view-order" data-id="${
-                    order._id
-                  }">
-                  <a href="order-details.html?id=${order._id}">    
-                  <i class="ri-eye-line text-lg"></i>
-                 </a>
-                  </button>
-                  <button class="text-gray-400 hover:text-gray-600 more-options relative">
-                      <i class="ri-more-2-fill text-lg"></i>
-                  </button>
-  
-                  <!-- Improved Dropdown -->
-                  <div class="dropdown-menu absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-md border border-gray-300 hidden z-10">
-                      <button class="block w-full text-left text-sm text-gray-700 px-4 py-2 hover:bg-gray-100 update-order" data-id="${
-                        order._id
-                      }">
-                          <i class="ri-edit-line text-blue-500"></i> Update
-                      </button>
-                      <button class="block w-full text-left text-sm text-red-600 px-4 py-2 hover:bg-red-100 delete-order" data-id="${
-                        order._id
-                      }">
-                          <i class="ri-delete-bin-line text-red-500"></i> Delete
-                      </button>
-                  </div>
-              </div>
-          </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 relative">
+                <div class="flex gap-2 items-center relative">
+                    <button class="text-gray-400 hover:text-gray-600 view-order" data-id="${
+                      order._id
+                    }">
+                      <a href="order-details.html?id=${order._id}">
+                        <i class="ri-eye-line text-lg"></i>
+                      </a>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600 more-options relative">
+                        <i class="ri-more-2-fill text-lg"></i>
+                    </button>
+                    <div class="dropdown-menu absolute right-0 mt-2 w-36 bg-white shadow-lg rounded-md border border-gray-300 hidden z-10">
+                        <a href="/edit-order.html?id=${
+                          order._id
+                        }" class="block w-full text-left text-sm text-gray-700 px-4 py-2 hover:bg-gray-100" data-id="${
+          order._id
+        }">
+                            <i class="ri-edit-line text-blue-500"></i> Update
+                        </a>
+                        <button class="block w-full text-left text-sm text-red-600 px-4 py-2 hover:bg-red-100 delete-order" data-id="${
+                          order._id
+                        }">
+                            <i class="ri-delete-bin-line text-red-500"></i> Delete
+                        </button>
+                    </div>
+                </div>
+              </td>
             `;
         tableBody.appendChild(row);
       });
 
-      // Handle "View Order" button click
-      document.querySelectorAll(".view-order").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const orderId = event.currentTarget.dataset.id;
-          window.location.href = `order-details.html?id=${orderId}`;
-        });
-      });
-
-      // Handle "More Options" button click
-      document.querySelectorAll(".more-options").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-          const dropdown = event.currentTarget.nextElementSibling;
-          document.querySelectorAll(".dropdown-menu").forEach((menu) => {
-            if (menu !== dropdown) menu.classList.add("hidden");
-          });
-          dropdown.classList.toggle("hidden");
-        });
-      });
-
-      // Close dropdown when clicking outside
-      document.addEventListener("click", () => {
-        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
-          menu.classList.add("hidden");
-        });
-      });
-
-      // Handle "Update Order" button click (Modify as needed)
-      document.querySelectorAll(".update-order").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          const orderId = event.currentTarget.dataset.id;
-          alert(`Update Order: ${orderId}`); // Replace with actual update logic
-        });
-      });
-
-      document.querySelectorAll(".delete-order").forEach((button) => {
-        button.addEventListener("click", async (event) => {
-          event.stopPropagation();
-          const orderId = event.currentTarget.dataset.id;
-          await deleteOrder(orderId, event.currentTarget);
-        });
-      });
-
-      async function deleteOrder(orderId, button) {
-        if (!confirm("Are you sure you want to delete this order?")) {
-          return;
-        }
-
-        const row = button.closest("tr"); // Find the row containing this order
-        const originalContent = button.innerHTML;
-
-        button.innerHTML = `<i class="ri-loader-line animate-spin text-red-500"></i> Deleting...`;
-        console.log(originalContent);
-        console.log(orderId);
-
-        // Show loading spinner
-        button.disabled = true;
-
-        try {
-          const response = await fetch(
-            `https://african-store.onrender.com/api/v1/order/${orderId}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(`Failed with status ${response.status}`);
-          }
-
-          // Remove the deleted order from UI
-          row.remove();
-
-          Swal.fire({
-            title: "Deleted!",
-            text: "The order has been deleted.",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 2000,
-          });
-        } catch (error) {
-          console.error("Error deleting order:", error);
-          alert("Failed to delete the order. Please try again.");
-
-          // Revert the button to original state
-          button.innerHTML = originalContent;
-          button.disabled = false;
-        }
-      }
-
+      // (Re)attach event listeners for view, more options, delete, etc.
+      attachEventListeners();
       updatePaginationControls();
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   }
 
-  filterDropdown.addEventListener("change", async function () {
-    const selectedFilter = filterDropdown.value;
-    fetchOrders(1, selectedFilter);
-  });
+  function attachEventListeners() {
+    // View order
+    document.querySelectorAll(".view-order").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const orderId = event.currentTarget.dataset.id;
+        window.location.href = `order-details.html?id=${orderId}`;
+      });
+    });
+
+    // More options dropdown
+    document.querySelectorAll(".more-options").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const dropdown = event.currentTarget.nextElementSibling;
+        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+          if (menu !== dropdown) menu.classList.add("hidden");
+        });
+        dropdown.classList.toggle("hidden");
+      });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", () => {
+      document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+        menu.classList.add("hidden");
+      });
+    });
+
+    // Delete order
+    document.querySelectorAll(".delete-order").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        const orderId = event.currentTarget.dataset.id;
+        await deleteOrder(orderId, event.currentTarget);
+      });
+    });
+  }
+
+  async function deleteOrder(orderId, button) {
+    if (!confirm("Are you sure you want to delete this order?")) {
+      return;
+    }
+
+    const row = button.closest("tr");
+    const originalContent = button.innerHTML;
+    button.innerHTML = `<i class="ri-loader-line animate-spin text-red-500"></i> Deleting...`;
+    button.disabled = true;
+
+    try {
+      const response = await fetch(
+        `https://african-store.onrender.com/api/v1/order/${orderId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        Swal.fire({
+          title: "Delete order",
+          text: "Delete order failed",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      row.remove();
+
+      Swal.fire({
+        title: "Deleted!",
+        text: "The order has been deleted.",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      alert("Failed to delete the order. Please try again.");
+      button.innerHTML = originalContent;
+      button.disabled = false;
+    }
+  }
 
   function updatePaginationControls() {
     const totalPages = Math.ceil(totalOrders / limit);
@@ -239,7 +234,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         <button class="page-number relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${
                           currentPage === i + 1 ? "bg-gray-300" : ""
                         }" data-page="${i + 1}">
-                            ${i + 1}
+                          ${i + 1}
                         </button>
                       `
                       ).join("")}
@@ -256,22 +251,146 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.querySelector(".prev-page")?.addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        fetchOrders(currentPage);
+        fetchOrders(currentPage, currentFilter);
       }
     });
     document.querySelector(".next-page")?.addEventListener("click", () => {
       if (currentPage < totalPages) {
         currentPage++;
-        fetchOrders(currentPage);
+        fetchOrders(currentPage, currentFilter);
       }
     });
     document.querySelectorAll(".page-number").forEach((button) => {
       button.addEventListener("click", () => {
         currentPage = parseInt(button.dataset.page);
-        fetchOrders(currentPage);
+        fetchOrders(currentPage, currentFilter);
       });
     });
   }
 
-  fetchOrders(currentPage);
+  // Export Function: Generate a PDF of all orders instead of CSV.
+  async function exportOrders() {
+    const exportBtn = document.getElementById("exportBtn");
+    const originalContent = exportBtn.innerHTML;
+
+    // Show spinner on export button
+    exportBtn.innerHTML = `<i class="ri-loader-line animate-spin text-gray-500"></i> Exporting...`;
+    exportBtn.disabled = true;
+
+    try {
+      // Fetch all orders using a high limit (or a dedicated export endpoint)
+      const url = new URL(
+        "https://african-store.onrender.com/api/v1/order/pagination"
+      );
+      url.searchParams.append("page", 1);
+      url.searchParams.append("limit", 1000000); // High limit to get all orders
+      if (currentFilter) {
+        url.searchParams.append("filter", currentFilter);
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      const orders = data.orders;
+      if (!orders || orders.length === 0) {
+        alert("No orders to export.");
+        return;
+      }
+
+      // Create PDF using jsPDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 10;
+
+      // Header Section
+      doc.setFillColor(230, 230, 230);
+      doc.rect(0, 0, 210, 20, "F");
+      doc.setFontSize(18);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Orders Export", 105, 14, { align: "center" });
+      y = 30;
+
+      // Loop through orders and add details
+      orders.forEach((order, idx) => {
+        doc.setFontSize(12);
+        doc.text(`Order ID: ${order._id}`, 10, y);
+        y += 6;
+        doc.text(`Customer: ${order.customer_name}`, 10, y);
+        y += 6;
+        doc.text(
+          `Order Date: ${new Date(order.createdAt).toLocaleDateString()}`,
+          10,
+          y
+        );
+        y += 6;
+        doc.text(`Amount Paid: ₤${order.amount_paid.toFixed(2)}`, 10, y);
+        y += 6;
+        doc.text(`Status: ${order.order_status}`, 10, y);
+        y += 6;
+        doc.text("Items:", 10, y);
+        y += 6;
+        order.order_items.forEach((item, itemIdx) => {
+          doc.text(
+            `- ${item.food_name} | Qty: ${
+              item.quantity
+            } | Price: ₤${item.price.toFixed(2)}`,
+            12,
+            y
+          );
+          y += 6;
+        });
+        y += 4;
+        // Draw horizontal line between orders
+        doc.line(10, y, 200, y);
+        y += 6;
+
+        // If y is near the bottom, add a new page
+        if (y > 280) {
+          doc.addPage();
+          y = 10;
+        }
+      });
+
+      doc.save("orders_export.pdf");
+    } catch (error) {
+      console.error("Error exporting orders:", error);
+      alert("Failed to export orders. Please try again.");
+    } finally {
+      exportBtn.innerHTML = originalContent;
+      exportBtn.disabled = false;
+    }
+  }
+
+  // Attach export functionality to the export button
+  const exportBtnElement = document.getElementById("exportBtn");
+  exportBtnElement.addEventListener("click", exportOrders);
+
+  // Attach filter functionality to buttons (using your provided HTML)
+  const filterButtons = document.querySelectorAll(".filter-btn");
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Remove active styling from all filter buttons
+      filterButtons.forEach((btn) => {
+        btn.classList.remove("bg-gray-100", "text-gray-900");
+        btn.classList.add("text-gray-500");
+      });
+
+      // Add active styling to clicked button
+      this.classList.add("bg-gray-100", "text-gray-900");
+      this.classList.remove("text-gray-500");
+
+      // Set the filter value and refetch orders from page 1
+      currentFilter = this.getAttribute("data-id") || "";
+      currentPage = 1;
+      fetchOrders(currentPage, currentFilter);
+    });
+  });
+
+  // Initial fetch
+  fetchOrders(currentPage, currentFilter);
 });

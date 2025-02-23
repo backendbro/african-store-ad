@@ -15,6 +15,9 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
+        
+          
     </style>
 </head>
 <body class="bg-gray-100">
@@ -139,30 +142,30 @@
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center">
                         <h3 class="text-sm font-medium text-gray-500">Pending Orders</h3>
-                        <span class="text-green-500 text-xs">+2.5%</span>
+                        <span class="text-green-500 text-xs" id="pendingChange">0%</span>
                     </div>
-                    <p class="text-2xl font-semibold mt-2">100k</p>
+                    <p class="text-2xl font-semibold mt-2" id="pendingCount">0k</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center">
                         <h3 class="text-sm font-medium text-gray-500">Completed Orders</h3>
-                        <span class="text-green-500 text-xs">+2.0%</span>
+                        <span class="text-green-500 text-xs" id="completedChange">0%</span>
                     </div>
-                    <p class="text-2xl font-semibold mt-2">180k</p>
+                    <p class="text-2xl font-semibold mt-2" id="completedCount">0</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center">
                         <h3 class="text-sm font-medium text-gray-500">Cancelled Orders</h3>
-                        <span class="text-red-500 text-xs">-0.25%</span>
+                        <span class="text-red-500 text-xs" id="cancelledChange">0%</span>
                     </div>
-                    <p class="text-2xl font-semibold mt-2">2000</p>
+                    <p class="text-2xl font-semibold mt-2" id="cancelledCount">0</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center">
                         <h3 class="text-sm font-medium text-gray-500">Refund Request</h3>
-                        <span class="text-green-500 text-xs">+1.25%</span>
+                        <span class="text-green-500 text-xs" id="refundChange">0%</span>
                     </div>
-                    <p class="text-2xl font-semibold mt-2">800</p>
+                    <p class="text-2xl font-semibold mt-2" id="refundCount">0</p>
                 </div>
             </div>
     
@@ -170,13 +173,15 @@
             <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div class="flex gap-2">
-                        <button data-id="24h" class="all-time px-4 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-md">All Time</button>
-                        <button data-id="month" class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">This Month</button>
-                        <button data-id="7d" class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">7 Days</button>
-                        <button  class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">24 Hour</button>
-                    </div>
+                        <button data-id="all" class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 rounded-md">All Time</button>
+                        <button data-id="month" class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">This Month</button>
+                        <button data-id="7d" class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">7 Days</button>
+                        <button data-id="24h" class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">24 Hour</button>
+                        <button data-id="30m" class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">30 mins</button>
+                      </div>
+                      
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md flex items-center gap-2">
+                        <button id="exportBtn" class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md flex items-center gap-2">
                             <i class="ri-file-transfer-line"></i> Export
                         </button>
                     </div>
@@ -216,31 +221,6 @@
                             </tr>
                         </thead>
                         <tbody class="tbody bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="checkbox" class="rounded text-blue-600">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><a class="text-blue-400 cusor-pointerhover:text-gray-700 " href="./order-details.html">#123456</a> </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bag of Rice</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">03 Dec 2024</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Ayo Tunde</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₤74400.00</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        Processing
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <div class="flex gap-2">
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i class="ri-eye-line"></i>
-                                        </button>
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i class="ri-more-2-fill"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
                            
                         </tbody>
                     </table>
@@ -290,7 +270,11 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <script src="/js/get-orders.js"></script>
+    <script src="/js/order-stats.js"></script>
+
     <script>
         function toggleDropdown() {
             console.log("Reacched")

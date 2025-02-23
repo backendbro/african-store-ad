@@ -131,25 +131,25 @@
                     <div class="flex items-center gap-2  text-sm text-gray-500 mb-2">
                         <span>Order Details</span>
                         <i class="ri-arrow-right-s-line"></i>
-                        <span>#F513546151531 - 03 Dec 2024 at 6:23pm</span>
+                        <span><span id="order-id">#</span> - <span id="order-date">03 Dec 2024 at 6:23pm</span></span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-semibold">#F513546151531</h1>
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                        <h1 id="order-h1-id" class="text-xl font-semibold">#</h1>
+                        <span id="payment_method" class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                             Paid
                         </span>
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <span id="order_status" class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                             Processing
                         </span>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 flex items-center gap-2">
+                    <button id="exportPDFBtn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 flex items-center gap-2">
                         <i class="ri-download-line"></i> Export
                     </button>
-                    <button class="px-4 py-2 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:bg-gray-800">
+                    <a id="edit-order" class="px-4 py-2 text-sm font-medium text-white bg-black rounded-md shadow-sm hover:bg-gray-800">
                         Edit Order
-                    </button>
+                    </a>
                 </div>
             </div>
     
@@ -157,7 +157,7 @@
                 <!-- Order Info -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Customer Info -->
-                    <div class="bg-white rounded-lg shadow-sm p-6">
+                    <!-- <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500 mb-4">Delivery Address</h3>
@@ -176,13 +176,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
     
                     <!-- Order Items -->
                     <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-sm font-medium text-gray-500 mb-4">Order List <span class="text-gray-400">(2 Products)</span></h3>
-                        <div class="divide-y divide-gray-200">
-                            <div class="py-4 flex items-start gap-4">
+                        <h3 class="text-sm font-medium text-gray-500 mb-4">Order List <span class="text-gray-400" id="items_count">(0 Products)</span></h3>
+                        <div class="divide-y divide-gray-200" id="orderItemsContainer">
+                            <!-- <div class="py-4 flex items-start gap-4">
                                 <img src="assest/img/Acha Spices.JPG" alt="Product" class="w-20 h-20 rounded-lg object-cover">
                                 <div class="flex-1">
                                     <h4 class="font-medium">Acha Spice</h4>
@@ -209,7 +209,7 @@
                                 <div class="text-right">
                                     <p class="font-medium">₩4000</p>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -222,31 +222,28 @@
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Payment Method</span>
-                                <span class="font-medium">UPI</span>
+                                <span class="font-medium" id="payment_details_method">Payment method</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Bag total</span>
-                                <span>₤758</span>
+                                <span id="bag_total">₤0</span>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-500">Discover on MRP</span>
-                                <span class="text-green-600">₤14577.95</span>
-                            </div>
+                           
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Shipping fee</span>
-                                <span class="text-green-600">Free</span>
+                                <span class="text-green-600" id="shipping_total">₤0</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Sub total</span>
-                                <span>₤721.5</span>
+                                <span id="sub_total">₤0</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Convenience Charges</span>
-                                <span>₤11</span>
+                                <span id="con_charges">₤0</span>
                             </div>
                             <div class="flex justify-between items-center pt-3 border-t">
                                 <span class="font-medium">Paid</span>
-                                <span class="font-medium">₤1710</span>
+                                <span class="font-medium" id="total_balance">₤1710</span>
                             </div>
                         </div>
                     </div>
@@ -259,13 +256,13 @@
                                 <div class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100">
                                     <i class="ri-check-line text-green-600"></i>
                                 </div>
-                                <div>
+                                <div id="orderStatusSection">
                                     <p class="font-medium">Order Placed</p>
                                     <p class="text-sm text-gray-500">An order has been placed.</p>
                                     <p class="text-xs text-gray-400">03/12/2024, 03:20</p>
                                 </div>
                             </div>
-                            <div class="flex gap-4">
+                            <!-- <div class="flex gap-4">
                                 <div class="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
                                     <i class="ri-time-line text-yellow-600"></i>
                                 </div>
@@ -274,8 +271,8 @@
                                     <p class="text-sm text-gray-500">Seller has processed your order.</p>
                                     <p class="text-xs text-gray-400">03/12/2024, 03:15</p>
                                 </div>
-                            </div>
-                            <div class="flex gap-4">
+                            </div> -->
+                            <!-- <div class="flex gap-4">
                                 <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100">
                                     <i class="ri-box-3-line text-gray-400"></i>
                                 </div>
@@ -301,7 +298,7 @@
                                     <p class="font-medium text-gray-400">Delivered</p>
                                     <p class="text-sm text-gray-400">DD/MM/YY, 00:00</p>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -310,6 +307,11 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="/js/order-details.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="/js/exportOrderPDF.js"></script>
+
+
     <script>
         function toggleDropdown() {
             console.log("Reacched")
