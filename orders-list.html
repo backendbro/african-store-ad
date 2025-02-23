@@ -170,15 +170,12 @@
             <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-md">All Time</button>
-                        <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">This Month</button>
-                        <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">7 Days</button>
-                        <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">24 Hour</button>
+                        <button data-id="24h" class="all-time px-4 py-2 text-sm font-medium text-gray-900 bg-gray-100 rounded-md">All Time</button>
+                        <button data-id="month" class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">This Month</button>
+                        <button data-id="7d" class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">7 Days</button>
+                        <button  class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md">24 Hour</button>
                     </div>
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md flex items-center gap-2">
-                            <i class="ri-calendar-line"></i> Select Dates
-                        </button>
                         <button class="px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 rounded-md flex items-center gap-2">
                             <i class="ri-file-transfer-line"></i> Export
                         </button>
@@ -218,7 +215,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="tbody bg-white divide-y divide-gray-200">
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <input type="checkbox" class="rounded text-blue-600">
@@ -244,13 +241,13 @@
                                     </div>
                                 </td>
                             </tr>
-                            <!-- Repeat similar rows for other orders -->
+                           
                         </tbody>
                     </table>
                 </div>
                 
                 <!-- Pagination -->
-                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="pagination-container bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                     <div class="flex-1 flex justify-between sm:hidden">
                         <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                             Previous
@@ -293,6 +290,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="/js/get-orders.js"></script>
     <script>
         function toggleDropdown() {
             console.log("Reacched")
