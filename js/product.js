@@ -21,6 +21,7 @@ document
 
     for (const file of files) {
       formData.append("images[]", file);
+      console.log(files);
 
       // Show local preview before upload
       const reader = new FileReader();
@@ -57,180 +58,10 @@ document
     }
   });
 
-//     // Select all spans with a data-id attribute inside the div with id 'selectedCategories'
-//     const spans = document.querySelectorAll(
-//       "#selectedCategories span[data-id]"
-//     );
-
-//     // Create an array to hold the results
-//     let spanData = [];
-
-//     spans.forEach((span) => {
-//       // Push an object with both the text content and data-id into the array
-//       spanData.push({
-//         text: span.textContent,
-//         dataId: span.getAttribute("data-id"),
-//       });
-//     });
-
-//     console.log(spanData[0].dataId); // Logs the array containing the text and data-id of each span
-
-//     // Create your form data object
-
-//     formData.append("name", productName.value);
-//     formData.append("description", productDescription.value);
-//     formData.append("BasePrice", basePrice.value);
-//     formData.append("StockQuantity", StockQuantity.value);
-//     formData.append("Discount", discount.value);
-//     formData.append("DiscountType", discountType.value);
-
-//     const selectedRadio = document.querySelector(
-//       'input[name="packaging"]:checked'
-//     );
-//     if (selectedRadio) {
-//       formData.append("PackagingType", selectedRadio.value);
-//     }
-
-//     // Send it to the backend as JSON or in the appropriate format
-//     const response = await fetch(
-//       `https://african-store.onrender.com/api/v1/product/create/${spanData[0].dataId}`,
-//       {
-//         method: "POST",
-//         headers: {
-//           Authorization: `Bearer ${tokenize}`,
-//         },
-//         body: formData,
-//       }
-//     );
-
-//     if (response.ok) {
-//       // Handle success
-//       const data = await response.json();
-//       console.log("Product created successfully", data);
-
-//       Swal.fire({
-//         title: "Product",
-//         text: "Product created",
-//         icon: "success",
-//         showConfirmButton: false,
-//         timer: 2000, // Auto close in 2 seconds
-//       });
-
-//       spinner.remove();
-
-//       setTimeout(() => {
-//         window.location.reload();
-//       }, 2000);
-//     } else {
-//       // Handle error
-//       console.log(response);
-//       console.log("Error creating product");
-
-//       Swal.fire({
-//         title: "Product",
-//         text: "Error creating product",
-//         icon: "error",
-//         showConfirmButton: false,
-//         timer: 2000, // Auto close in 2 seconds
-//       });
-
-//       spinner.remove();
-
-//       setTimeout(() => {
-//         window.location.reload();
-//       }, 2000);
-//     }
-//   });
-
 // Get product ID from URL
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get("id");
 console.log(productId);
-
-// document.getElementById("submitButton").addEventListener("click", async (e) => {
-//   e.preventDefault();
-
-//   const button = document.getElementById("submitButton");
-//   const spinner = document.createElement("span");
-//   spinner.classList.add("spinner");
-//   button.appendChild(spinner);
-
-//   // Select all spans with a data-id attribute inside the div with id 'selectedCategories'
-//   const spans = document.querySelectorAll("#selectedCategories span[data-id]");
-
-//   // Create an array to hold the results
-//   let spanData = [];
-
-//   spans.forEach((span) => {
-//     // Push an object with both the text content and data-id into the array
-//     spanData.push({
-//       text: span.textContent,
-//       dataId: span.getAttribute("data-id"),
-//     });
-//   });
-
-//   console.log(spanData[0].dataId);
-
-//   formData.append("name", productName.value);
-//   formData.append("description", productDescription.value);
-//   formData.append("BasePrice", basePrice.value);
-//   formData.append("StockQuantity", StockQuantity.value);
-//   formData.append("Discount", discount.value);
-//   formData.append("DiscountType", discountType.value);
-//   formData.append("categoryId", spanData[0].dataId);
-
-//   const selectedRadio = document.querySelector(
-//     'input[name="packaging"]:checked'
-//   );
-//   if (selectedRadio) {
-//     formData.append("PackagingType", selectedRadio.value);
-//   }
-
-//   try {
-//     const url = productId
-//       ? `https://african-store.onrender.com/api/v1/product/${productId}`
-//       : `https://african-store.onrender.com/api/v1/product/create/${spanData[0].dataId}`;
-
-//     const response = await fetch(url, {
-//       method: productId ? "PUT" : "POST",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: formData,
-//     });
-
-//     console.log("created");
-//     if (response.ok) {
-//       console.log("Nice");
-
-//       Swal.fire({
-//         title: "Success!",
-//         text: `Product ${productId ? "updated" : "created"} successfully`,
-//         icon: "success",
-//         showConfirmButton: false,
-//         timer: 2000,
-//       }).then((swa) => {
-//         console.log(swa);
-//         Swal.close();
-//         window.location.reload();
-//       });
-//     } else {
-//       const error = await response.json();
-//       Swal.fire({
-//         title: "Error!",
-//         text: error.message || "Operation failed",
-//         icon: "error",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     Swal.fire({
-//       title: "Error!",
-//       text: "Network error occurred",
-//       icon: "error",
-//     });
-//   }
-// });
 
 document.getElementById("submitButton").addEventListener("click", async (e) => {
   e.preventDefault();
@@ -287,9 +118,7 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
     return;
   }
 
-  // Clear any previous FormData and reinitialize it
-  let formData = new FormData();
-
+  // Append text fields to the existing global FormData
   formData.append("name", productName.value);
   formData.append("description", productDescription.value);
   formData.append("BasePrice", basePrice.value);
@@ -305,6 +134,8 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
   if (selectedRadio) {
     formData.append("PackagingType", selectedRadio.value);
   }
+
+  console.log("FormData ready to be sent.");
 
   // Determine endpoint URL (update or create)
   const url = productId
@@ -362,7 +193,6 @@ if (productId) {
     try {
       const response = await fetch(
         `https://african-store.onrender.com/api/v1/product/${productId}`,
-
         {
           headers: {
             Authorization: `Bearer ${tokenize}`,
@@ -394,6 +224,7 @@ if (productId) {
     document.getElementById("discount-type").value =
       product.discountType || "no-discount";
 
+    document.querySelector("#quantityKg").value = product.Variants;
     console.log(product);
     if (product.PackagingType) {
       console.log("Product PackagingType:", product.PackagingType);
