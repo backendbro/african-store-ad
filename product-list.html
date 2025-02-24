@@ -171,11 +171,11 @@
                             class="w-full px-3 py-2 border rounded-md">
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button class="px-3 py-2 bg-gray-100 text-gray-900 rounded-md text-sm font-medium">All
+                        <button id="filter-all" class="px-3 py-2 bg-gray-100 text-gray-900 rounded-md text-sm font-medium">All
                             Products</button>
-                        <button class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">New
+                        <button id="filter-new" class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">New
                             Stock</button>
-                        <button class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">Low
+                        <button id="filter-lowStock" class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">Low
                             Stock</button>
                         <button
                             class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium flex items-center gap-2">
@@ -223,46 +223,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200" id="productList">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="checkbox" class="rounded text-blue-600">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center gap-3">
-                                        <img src="https://via.placeholder.com/40" alt="Product"
-                                            class="w-10 h-10 rounded-lg object-cover">
-                                        <div>
-                                            <div class="font-medium text-gray-900">Bag Of Maize</div>
-                                            <div class="text-sm text-gray-500">#771309</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    Foodstuff
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    89 units
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    ₤999.99
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        In Stock
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <div class="flex gap-2">
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i class="ri-pencil-line"></i>
-                                        </button>
-                                        <button class="text-gray-400 hover:text-gray-600">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                           
                             <!-- Repeat similar rows for other products -->
                         </tbody>
                     </table>

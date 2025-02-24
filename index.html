@@ -23,6 +23,13 @@
       body {
         font-family: "Inter", sans-serif;
       }
+
+      #mostSoldItemsContainer,
+      #recent-act {
+        min-height: 250px;
+        max-height: 350px;
+        overflow-y: auto;
+      }
     </style>
   </head>
   <body class="bg-gray-100">
@@ -211,24 +218,30 @@
                 <h3 class="text-sm font-medium text-gray-600">Total Sales</h3>
                 <i class="ri-money-dollar-circle-line text-gray-400"></i>
               </div>
-              <p class="mt-2 text-2xl font-bold">₤13,307,902</p>
-              <p class="mt-1 text-xs text-gray-500">+2.5% from last month</p>
+              <p class="mt-2 text-2xl font-bold" id="totalSales">€0</p>
+              <p class="mt-1 text-xs text-gray-500" id="salesChange">
+                0% from last month
+              </p>
             </div>
             <div class="rounded-lg border bg-white p-4 shadow-sm">
               <div class="flex items-center justify-between">
                 <h3 class="text-sm font-medium text-gray-600">Active Users</h3>
                 <i class="ri-user-line text-gray-400"></i>
               </div>
-              <p class="mt-2 text-2xl font-bold">34,945</p>
-              <p class="mt-1 text-xs text-gray-500">+12.4% from last month</p>
+              <p class="mt-2 text-2xl font-bold" id="activeUsers">0</p>
+              <p class="mt-1 text-xs text-gray-500" id="ordersChange">
+                0% from last month
+              </p>
             </div>
             <div class="rounded-lg border bg-white p-4 shadow-sm">
               <div class="flex items-center justify-between">
                 <h3 class="text-sm font-medium text-gray-600">Total Orders</h3>
                 <i class="ri-shopping-cart-line text-gray-400"></i>
               </div>
-              <p class="mt-2 text-2xl font-bold">34,945</p>
-              <p class="mt-1 text-xs text-gray-500">+2.5% from last month</p>
+              <p class="mt-2 text-2xl font-bold" id="totalOrders">0</p>
+              <p class="mt-1 text-xs text-gray-500" id="usersChange">
+                0% from last month
+              </p>
             </div>
           </div>
 
@@ -236,103 +249,13 @@
             <!-- Most Sold Items -->
             <div class="rounded-lg border bg-white p-4 shadow-sm md:col-span-4">
               <h3 class="mb-4 text-lg font-semibold">Most Sold Items</h3>
-              <div class="space-y-4">
-                <div>
-                  <div class="mb-1 flex items-center justify-between text-sm">
-                    <span>Rice</span>
-                    <span>75%</span>
-                  </div>
-                  <div class="h-2 w-full rounded-full bg-gray-200">
-                    <div
-                      class="h-2 rounded-full bg-blue-500"
-                      style="width: 75%"
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div class="mb-1 flex items-center justify-between text-sm">
-                    <span>Seasoning</span>
-                    <span>60%</span>
-                  </div>
-                  <div class="h-2 w-full rounded-full bg-gray-200">
-                    <div
-                      class="h-2 rounded-full bg-blue-500"
-                      style="width: 60%"
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div class="mb-1 flex items-center justify-between text-sm">
-                    <span>Beans</span>
-                    <span>80%</span>
-                  </div>
-                  <div class="h-2 w-full rounded-full bg-gray-200">
-                    <div
-                      class="h-2 rounded-full bg-blue-500"
-                      style="width: 80%"
-                    ></div>
-                  </div>
-                </div>
-                <div>
-                  <div class="mb-1 flex items-center justify-between text-sm">
-                    <span>Beverages</span>
-                    <span>50%</span>
-                  </div>
-                  <div class="h-2 w-full rounded-full bg-gray-200">
-                    <div
-                      class="h-2 rounded-full bg-blue-500"
-                      style="width: 50%"
-                    ></div>
-                  </div>
-                </div>
-              </div>
+              <div id="mostSoldItemsContainer" class="space-y-6"></div>
             </div>
 
             <!-- Recent Activity -->
             <div class="rounded-lg border bg-white p-4 shadow-sm md:col-span-3">
               <h3 class="mb-4 text-lg font-semibold">Recent Activity</h3>
-              <div class="space-y-4">
-                <div class="flex items-center gap-4">
-                  <div
-                    class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100"
-                  >
-                    <i class="ri-user-add-line text-blue-600"></i>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium">New Customer Registration</p>
-                    <p class="text-sm text-gray-500">
-                      John Smith created an account
-                    </p>
-                    <p class="text-xs text-gray-400">2 minutes ago</p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-4">
-                  <div
-                    class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100"
-                  >
-                    <i class="ri-shopping-bag-line text-green-600"></i>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium">New Order Placed</p>
-                    <p class="text-sm text-gray-500">Order #12345 was placed</p>
-                    <p class="text-xs text-gray-400">15 minutes ago</p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-4">
-                  <div
-                    class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100"
-                  >
-                    <i class="ri-box-3-line text-yellow-600"></i>
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium">Product Update</p>
-                    <p class="text-sm text-gray-500">
-                      Inventory updated for Winter Collection
-                    </p>
-                    <p class="text-xs text-gray-400">1 hour ago</p>
-                  </div>
-                </div>
-              </div>
+              <div class="space-y-4" id="recent-act"></div>
             </div>
           </div>
         </div>
@@ -356,5 +279,8 @@
       }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="/js/get-metric.js"></script>
+    <script src="/js/items.js"></script>
+    <script src="/js/recent-activity.js"></script>
   </body>
 </html>

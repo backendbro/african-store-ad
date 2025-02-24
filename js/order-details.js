@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Display unit price
       const priceP = document.createElement("p");
       priceP.className = "font-medium";
-      priceP.textContent = `₤${item.price}`;
+      priceP.textContent = `€${item.price}`;
       priceDiv.appendChild(priceP);
 
       const itemTotal = item.price * item.quantity;
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const totalPrice = item.price * item.quantity;
       const totalP = document.createElement("p");
       totalP.className = "font-medium text-sm text-gray-600";
-      totalP.textContent = `Total: ₤${totalPrice.toFixed(2)}`;
+      totalP.textContent = `Total: €${totalPrice.toFixed(2)}`;
       priceDiv.appendChild(totalP);
 
       // Append the image, details, and price to the item container
@@ -170,17 +170,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       container.appendChild(itemDiv);
     });
 
-    document.querySelector("#bag_total").innerText = `₤${grandTotal}`;
-    document.querySelector("#sub_total").innerText = `₤${grandTotal}`;
-    document.querySelector("#total_balance").innerText = `₤${grandTotal}`;
-    document.querySelector("#con_charges").innerText = `₤0`;
-    document.querySelector("#shipping_total").innerHTML = `₤0`;
+    document.querySelector("#bag_total").innerText = `€${grandTotal}`;
+    document.querySelector("#sub_total").innerText = `€${grandTotal}`;
+    document.querySelector("#total_balance").innerText = `€${grandTotal}`;
+    document.querySelector("#con_charges").innerText = `€0`;
+    document.querySelector("#shipping_total").innerHTML = `€0`;
 
     const grandTotalDiv = document.createElement("div");
     grandTotalDiv.className = "text-right mt-4";
     const grandTotalP = document.createElement("p");
     grandTotalP.className = "font-bold text-lg";
-    grandTotalP.textContent = `Grand total: ₤${grandTotal.toFixed(2)}`;
+    grandTotalP.textContent = `Grand total: €${grandTotal.toFixed(2)}`;
     grandTotalDiv.appendChild(grandTotalP);
 
     // Append the grand total container to the overall container

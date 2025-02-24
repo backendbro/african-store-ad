@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${
                 order.customer_name
               }</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₤${order.amount_paid.toFixed(
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">€${order.amount_paid.toFixed(
                 2
               )}</td>
               <td class="px-6 py-4 whitespace-nowrap">
@@ -298,7 +298,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       const data = await response.json();
       const orders = data.orders;
       if (!orders || orders.length === 0) {
-        alert("No orders to export.");
+        Swal.fire({
+          title: "Export order",
+          text: "This time period does have any order",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 2000,
+        });
         return;
       }
 
@@ -328,7 +334,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           y
         );
         y += 6;
-        doc.text(`Amount Paid: ₤${order.amount_paid.toFixed(2)}`, 10, y);
+        doc.text(`Amount Paid: €${order.amount_paid.toFixed(2)}`, 10, y);
         y += 6;
         doc.text(`Status: ${order.order_status}`, 10, y);
         y += 6;
@@ -338,7 +344,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           doc.text(
             `- ${item.food_name} | Qty: ${
               item.quantity
-            } | Price: ₤${item.price.toFixed(2)}`,
+            } | Price: €${item.price.toFixed(2)}`,
             12,
             y
           );

@@ -348,6 +348,22 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script>
+      function toggleDropdown() {
+        console.log("Reacched");
+        const dropdown = document.getElementById("productsDropdown");
+        const arrow = document.getElementById("dropdownArrow");
+        dropdown.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-180");
+      }
+      function toggleDropdown2() {
+        console.log("Reacched");
+        const dropdown = document.getElementById("productsDropdown2");
+        const arrow = document.getElementById("dropdownArrow2");
+        dropdown.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-180");
+      }
+    </script>
     <script type="module">
       // Helper functions for localStorage with expiration (24 hours)
       function setLocalOrders(orders) {

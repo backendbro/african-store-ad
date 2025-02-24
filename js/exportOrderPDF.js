@@ -90,13 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.text(`${index + 1}. ${item.food_name}`, marginLeft, y);
         y += 6;
         doc.text(
-          `   Qty: ${item.quantity} | Unit Price: ₤${item.price.toFixed(2)}`,
+          `   Qty: ${item.quantity} | Unit Price: €${item.price.toFixed(2)}`,
           marginLeft + 6,
           y
         );
         y += 6;
         const itemTotal = item.price * item.quantity;
-        doc.text(`   Total: ₤${itemTotal.toFixed(2)}`, marginLeft + 6, y);
+        doc.text(`   Total: €${itemTotal.toFixed(2)}`, marginLeft + 6, y);
         y += 8;
         // Draw a line after each item
         doc.line(marginLeft, y, marginRight, y);
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       y += 10;
       doc.setFontSize(14);
-      doc.text(`Grand Total: ₤${grandTotal.toFixed(2)}`, marginLeft, y);
+      doc.text(`Grand Total: €${grandTotal.toFixed(2)}`, marginLeft, y);
 
       // Save the PDF with a dynamic filename
       doc.save(`order_${order._id}.pdf`);
