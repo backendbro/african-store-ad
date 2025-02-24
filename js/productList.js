@@ -10,13 +10,12 @@ let activeFilter = "all"; // Default filter
 async function fetchProducts(page = 1, filter = "all") {
   let url = `https://african-store.onrender.com/api/v1/product/product-admin?page=${page}&limit=${limit}`;
   if (filter === "new") {
-    url += "&filter=newStock";
+    url += "&filterType=new";
   } else if (filter === "low") {
-    url += "&filter=lowStock";
+    url += "&filterType=lowStock";
   }
   try {
     const response = await fetch(url);
-
     const result = await response.json();
 
     console.log(result);
@@ -63,12 +62,11 @@ function renderProducts(products) {
         €${product.BasePrice.toFixed(2)}
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
-        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-          ${
-            product.StockQuantity > 0
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }">
+        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+          product.StockQuantity > 0
+            ? "bg-green-100 text-green-800"
+            : "bg-red-100 text-red-800"
+        }">
           ${product.StockQuantity > 0 ? "In Stock" : "Out of Stock"}
         </span>
       </td>
@@ -85,7 +83,6 @@ function renderProducts(products) {
         </div>
       </td>
     `;
-
     productList.appendChild(tr);
   });
 }
@@ -106,23 +103,22 @@ function renderPagination({ currentPage, totalPages, totalProducts }) {
       </p>
 
       <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-        <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-          ${currentPage === 1 ? "disabled" : ""}>
+        <button id="prevPage" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" ${
+          currentPage === 1 ? "disabled" : ""
+        }>
           <i class="ri-arrow-left-s-line"></i>
         </button>
         ${Array.from({ length: totalPages }, (_, i) => {
           const page = i + 1;
           const activeClass =
             page === currentPage ? "font-bold bg-gray-200" : "";
-          return `
-            <button class="page-btn relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${activeClass}"
-              data-page="${page}">
+          return `<button class="page-btn relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 ${activeClass}" data-page="${page}">
               ${page}
-            </button>
-          `;
+            </button>`;
         }).join("")}
-        <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-          ${currentPage === totalPages ? "disabled" : ""}>
+        <button id="nextPage" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" ${
+          currentPage === totalPages ? "disabled" : ""
+        }>
           <i class="ri-arrow-right-s-line"></i>
         </button>
       </nav>
@@ -131,17 +127,18 @@ function renderPagination({ currentPage, totalPages, totalProducts }) {
 
   // Attach event listeners
   document.getElementById("prevPage").addEventListener("click", () => {
-    if (currentPage > 1) fetchProducts(--currentPage);
+    if (currentPage > 1) fetchProducts(--currentPage, activeFilter);
   });
 
   document.getElementById("nextPage").addEventListener("click", () => {
-    if (currentPage < totalPages) fetchProducts(++currentPage);
+    if (currentPage < totalPages) fetchProducts(++currentPage, activeFilter);
   });
 
   document.querySelectorAll(".page-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const selectedPage = Number(e.target.dataset.page);
-      fetchProducts(selectedPage);
+      currentPage = selectedPage;
+      fetchProducts(selectedPage, activeFilter);
     });
   });
 }
@@ -164,6 +161,7 @@ filterButtons.forEach((button) => {
     const selectedFilter = button.dataset.filter;
     if (selectedFilter !== activeFilter) {
       activeFilter = selectedFilter;
+      currentPage = 1;
       updateActiveFilter(activeFilter);
       fetchProducts(1, activeFilter);
     }

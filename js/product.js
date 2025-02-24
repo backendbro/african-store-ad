@@ -9,6 +9,7 @@ const StockQuantity = document.getElementById("StockQuantity");
 const discount = document.getElementById("discount");
 const discountType = document.getElementById("discount-type");
 const selectedRadio = document.querySelector('input[name="packaging"]:checked');
+const quantity = document.querySelector("#quantityKg");
 
 document
   .getElementById("productImage")
@@ -55,16 +56,6 @@ document
       reader.readAsDataURL(file);
     }
   });
-
-// document
-//   .getElementById("submitButton")
-//   .addEventListener("click", async function (event) {
-//     event.preventDefault();
-
-//     const button = document.getElementById("submitButton");
-//     const spinner = document.createElement("span");
-//     spinner.classList.add("spinner");
-//     button.appendChild(spinner);
 
 //     // Select all spans with a data-id attribute inside the div with id 'selectedCategories'
 //     const spans = document.querySelectorAll(
@@ -266,7 +257,8 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
     !basePrice.value.trim() ||
     !StockQuantity.value.trim() ||
     !discount.value.trim() ||
-    !discountType.value.trim()
+    !discountType.value.trim() ||
+    !quantity.value.trim()
   ) {
     Swal.fire("Error", "Please fill out all required fields.", "error");
     spinner.remove();
@@ -305,6 +297,7 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
   formData.append("Discount", discount.value);
   formData.append("DiscountType", discountType.value);
   formData.append("categoryId", spanData[0].dataId);
+  formData.append("Variants", quantity.value);
 
   const selectedRadio = document.querySelector(
     'input[name="packaging"]:checked'
