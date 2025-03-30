@@ -48,7 +48,9 @@
         color: #666;
       }
       .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         background-color: #667eea;
         color: #fff;
         font-size: 1rem;
@@ -59,6 +61,7 @@
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.2s ease;
         text-decoration: none;
+        position: relative;
       }
       .btn:hover {
         background-color: #5a67d8;
@@ -66,6 +69,24 @@
       }
       .btn:active {
         transform: translateY(0);
+      }
+      .btn .loader {
+        display: none;
+        margin-left: 10px;
+        width: 16px;
+        height: 16px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
       .footer {
         margin-top: 20px;
@@ -82,7 +103,10 @@
         generated, you will be able to view the spreadsheet via the provided
         link.
       </p>
-      <button class="btn" id="generateBtn">Generate Spreadsheet</button>
+      <button class="btn" id="generateBtn">
+        Generate Spreadsheet
+        <span class="loader"></span>
+      </button>
       <div class="footer">Admin Dashboard</div>
     </div>
 
@@ -91,7 +115,9 @@
         .getElementById("generateBtn")
         .addEventListener("click", function () {
           const button = this;
+          const loader = button.querySelector(".loader");
           button.disabled = true;
+          loader.style.display = "inline-block";
 
           fetch("https://african-store.onrender.com/api/v1/order-summary", {
             method: "POST",
@@ -104,6 +130,7 @@
             })
             .then((data) => {
               button.disabled = false;
+              loader.style.display = "none";
               Swal.fire({
                 icon: "success",
                 title: "Order Summary Created",
@@ -113,6 +140,7 @@
             })
             .catch((error) => {
               button.disabled = false;
+              loader.style.display = "none";
               Swal.fire({
                 icon: "error",
                 title: "Oops...",
