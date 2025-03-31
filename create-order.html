@@ -511,47 +511,76 @@
       // Function to create a food item element.
       function createFoodItemElement() {
         const itemDiv = document.createElement("div");
-        itemDiv.className = "flex items-center space-x-2 mb-2";
+        itemDiv.className = "flex items-center space-x-2 mb-2 relative";
 
-        itemDiv.innerHTML = `
-    <!-- Input with datalist for searchable/selectable food items -->
-    <input list="foodItemsOptions"
-           class="food-item shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-           placeholder="Search or select food item">
-    
-    <!-- Quantity input -->
-    <input type="number" class="quantity shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-           placeholder="Quantity" min="1" value="1">
-    
-    <!-- Price input: read-only so admin cannot modify the price manually -->
-    <input type="number" class="price shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-           placeholder="Price" step="0.01" min="0" readonly>
-    
-    <!-- Product Image Display -->
-    <img class="product-image w-40 h-40 object-cover rounded border hidden" src="" alt="Product Image">
-    
-    <!-- Remove button -->
-    <button type="button" class="remove-item bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-      Remove
-    </button>
-  `;
+        // Create a container for the custom dropdown
+        const dropdownContainer = document.createElement("div");
+        dropdownContainer.className = "relative";
 
-        // Get references to the food item, quantity, price inputs, and image element.
-        const foodItemInput = itemDiv.querySelector(".food-item");
-        const quantityInput = itemDiv.querySelector(".quantity");
-        const priceInput = itemDiv.querySelector(".price");
-        const imageEl = itemDiv.querySelector(".product-image");
+        // Create the input element
+        const inputEl = document.createElement("input");
+        inputEl.type = "text";
+        inputEl.placeholder = "Search or select";
+        // Fixed width, bold text, etc.
+        inputEl.className =
+          "food-item w-48 font-bold shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
 
-        // Listen for input events on the food item input.
-        foodItemInput.addEventListener("input", () => {
-          const selectedValue = foodItemInput.value;
-          const product = productsData.find(
-            (p) => p.name.toLowerCase() === selectedValue.toLowerCase()
+        // Create the dropdown toggle button with an icon
+        const toggleBtn = document.createElement("button");
+        toggleBtn.type = "button";
+        toggleBtn.className =
+          "dropdown-toggle absolute right-0 top-0 h-full flex items-center px-2";
+        // Increase icon size and color for visibility
+        toggleBtn.innerHTML =
+          '<i class="ri-arrow-drop-down-line text-5xl text-black-800"></i>';
+
+        // Create the dropdown menu
+        const dropdownMenu = document.createElement("ul");
+        dropdownMenu.className =
+          "dropdown-menu absolute left-0 right-0 bg-white border rounded shadow-lg mt-1 hidden max-h-40 overflow-y-auto z-10";
+
+        // Function to populate dropdown based on filter text
+        function populateDropdown(filterText) {
+          dropdownMenu.innerHTML = "";
+          const filtered = productsData.filter((product) =>
+            product.name.toLowerCase().includes(filterText.toLowerCase())
           );
+          if (filtered.length > 0) {
+            filtered.forEach((product) => {
+              const li = document.createElement("li");
+              // Bold text and padding for better appearance
+              li.className =
+                "dropdown-item px-3 py-2 font-bold hover:bg-gray-100 cursor-pointer";
+              li.textContent = product.name;
+              li.addEventListener("click", () => {
+                inputEl.value = product.name;
+                dropdownMenu.classList.add("hidden");
+                // Fire the input event so that your product logic gets executed.
+                inputEl.dispatchEvent(new Event("input"));
+              });
+              dropdownMenu.appendChild(li);
+            });
+          } else {
+            // If no results, show a message
+            const li = document.createElement("li");
+            li.className = "dropdown-item px-3 py-2 text-gray-500";
+            li.textContent = "No results found";
+            dropdownMenu.appendChild(li);
+          }
+        }
 
+        // When user types, update the dropdown list
+        inputEl.addEventListener("input", () => {
+          const filterText = inputEl.value;
+          populateDropdown(filterText);
+          dropdownMenu.classList.remove("hidden");
+
+          // Run your product matching logic as before.
+          const product = productsData.find(
+            (p) => p.name.toLowerCase() === filterText.toLowerCase()
+          );
           if (product) {
             console.log(product);
-
             function calculateFinalPrice(basePrice, discount, discountType) {
               let finalPrice = basePrice;
               if (discountType === "Percentage") {
@@ -559,40 +588,92 @@
               } else if (discountType === "Fixed Amount") {
                 finalPrice = basePrice - discount;
               }
-              return finalPrice > 0 ? finalPrice : 0; // Ensure final price is not negative
+              return finalPrice > 0 ? finalPrice : 0;
             }
-
             const finalPrice = calculateFinalPrice(
               product.BasePrice,
               product.Discount,
               product.DiscountType
             );
-
             priceInput.value = parseFloat(finalPrice).toFixed(2);
-
-            // Set quantity to 1 for a head start.
             quantityInput.value = 1;
-
-            // Update and show image. Assume product.file[0] holds the image URL.
             const imageUrl = product.file[0] || "";
             if (imageUrl) {
               imageEl.src = imageUrl;
               imageEl.alt = product.name;
-              imageEl.classList.remove("hidden"); // Show image
+              imageEl.classList.remove("hidden");
             } else {
               imageEl.src = "";
               imageEl.alt = "Product Image";
-              imageEl.classList.add("hidden"); // Hide if no image
+              imageEl.classList.add("hidden");
             }
           } else {
             priceInput.value = "";
             imageEl.src = "";
             imageEl.alt = "Product Image";
-            imageEl.classList.add("hidden"); // Hide if product not found
+            imageEl.classList.add("hidden");
           }
-          // Recalculate total amount when a food item selection is made.
           updateTotalAmount();
         });
+
+        // Toggle dropdown on button click
+        toggleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          // Populate with current input or all products if empty
+          populateDropdown(inputEl.value);
+          dropdownMenu.classList.toggle("hidden");
+        });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+          if (!dropdownContainer.contains(e.target)) {
+            dropdownMenu.classList.add("hidden");
+          }
+        });
+
+        // Append input, toggle button, and dropdown menu to the container
+        dropdownContainer.appendChild(inputEl);
+        dropdownContainer.appendChild(toggleBtn);
+        dropdownContainer.appendChild(dropdownMenu);
+
+        // Create the quantity input
+        const quantityInput = document.createElement("input");
+        quantityInput.type = "number";
+        quantityInput.placeholder = "Quantity";
+        quantityInput.min = "1";
+        quantityInput.value = "1";
+        quantityInput.className =
+          "quantity shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
+
+        // Create the price input
+        const priceInput = document.createElement("input");
+        priceInput.type = "number";
+        priceInput.placeholder = "Price";
+        priceInput.step = "0.01";
+        priceInput.min = "0";
+        priceInput.readOnly = true;
+        priceInput.className =
+          "price shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
+
+        // Create the product image element
+        const imageEl = document.createElement("img");
+        imageEl.className =
+          "product-image w-40 h-40 object-cover rounded border hidden";
+        imageEl.alt = "Product Image";
+
+        // Create the remove button
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className =
+          "remove-item bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline";
+        removeBtn.textContent = "Remove";
+
+        // Append everything to the main itemDiv
+        itemDiv.appendChild(dropdownContainer);
+        itemDiv.appendChild(quantityInput);
+        itemDiv.appendChild(priceInput);
+        itemDiv.appendChild(imageEl);
+        itemDiv.appendChild(removeBtn);
 
         // Listen for changes in the quantity input.
         quantityInput.addEventListener("input", () => {
@@ -732,52 +813,54 @@
           const row = document.createElement("tr");
 
           row.innerHTML = `
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p class="text-gray-900 whitespace-no-wrap">${order.customer_name}</p>
-        <p class="text-gray-600 whitespace-no-wrap">${
-          order.createdAt ? new Date(order.createdAt).toLocaleString() : ""
-        }</p>
-      </td>
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <ul class="list-disc pl-5">
-          ${order.order_items
-            .map(
-              (item) =>
-                `<li>${item.food_name} - Quantity: ${
-                  item.quantity
-                }, Price: $${parseFloat(item.price).toFixed(2)}</li>`
-            )
-            .join("")}
-        </ul>
-      </td>
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p class="text-gray-900 whitespace-no-wrap">$${parseFloat(
-          order.amount_paid
-        ).toFixed(2)}</p>
-      </td>
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p class="text-gray-900 whitespace-no-wrap">${order.payment_method}</p>
-      </td>
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-          <span aria-hidden class="absolute inset-0 bg-${
-            order.order_status === "successful"
-              ? "green"
-              : order.order_status === "pending"
-              ? "yellow"
-              : "red"
-          }-200 opacity-50 rounded-full"></span>
-          <span class="relative">${order.order_status}</span>
-        </span>
-      </td>
-      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <button data-id="${
-          order._id
-        }" class="delete-order bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
-          Delete
-        </button>
-      </td>
-    `;
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <p class="text-gray-900 whitespace-no-wrap">${order.customer_name}</p>
+          <p class="text-gray-600 whitespace-no-wrap">${
+            order.createdAt ? new Date(order.createdAt).toLocaleString() : ""
+          }</p>
+        </td>
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <ul class="list-disc pl-5">
+            ${order.order_items
+              .map(
+                (item) =>
+                  `<li>${item.food_name} - Quantity: ${
+                    item.quantity
+                  }, Price: $${parseFloat(item.price).toFixed(2)}</li>`
+              )
+              .join("")}
+          </ul>
+        </td>
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <p class="text-gray-900 whitespace-no-wrap">$${parseFloat(
+            order.amount_paid
+          ).toFixed(2)}</p>
+        </td>
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <p class="text-gray-900 whitespace-no-wrap">${
+            order.payment_method
+          }</p>
+        </td>
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+            <span aria-hidden class="absolute inset-0 bg-${
+              order.order_status === "successful"
+                ? "green"
+                : order.order_status === "pending"
+                ? "yellow"
+                : "red"
+            }-200 opacity-50 rounded-full"></span>
+            <span class="relative">${order.order_status}</span>
+          </span>
+        </td>
+        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+          <button data-id="${
+            order._id
+          }" class="delete-order bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+            Delete
+          </button>
+        </td>
+      `;
           ordersList.appendChild(row);
         });
       }
