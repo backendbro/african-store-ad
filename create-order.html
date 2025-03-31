@@ -24,6 +24,11 @@
       body {
         font-family: "Inter", sans-serif;
       }
+
+      datalist#foodItemsOptions {
+        max-height: 150px;
+        overflow-y: auto;
+      }
     </style>
   </head>
 
@@ -114,6 +119,21 @@
                 <i class="ri-settings-line"></i>
                 Spreadsheet
               </a>
+
+              <a
+                href="/review.html"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                <i class="ri-mail-line"></i>
+                Review
+              </a>
+              <a
+                href="/account.html"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+              >
+                <i class="ri-login-circle-line"></i>
+                Login
+              </a>
             </nav>
           </div>
         </aside>
@@ -167,6 +187,20 @@
             <i class="ri-settings-line"></i>
             Spreadseet
           </a>
+          <a
+            href="/review.html"
+            class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+          >
+            <i class="ri-mail-line"></i>
+            Review
+          </a>
+          <a
+            href="/account.html"
+            class="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 hover:text-gray-900"
+          >
+            <i class="ri-login-circle-line"></i>
+            Login
+          </a>
         </nav>
       </aside>
 
@@ -209,24 +243,34 @@
             id="orderForm"
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           >
-            <div class="mb-4">
-              <label
-                class="block text-gray-700 text-sm font-bold mb-2"
-                for="foodItems"
+            <!-- Total Amount display in a refined bordered section -->
+            <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-6">
+              <div
+                id="totalAmount"
+                class="text-gray-700 text-2xl font-bold mb-4"
               >
-                Food Items
-              </label>
-              <div id="foodItemsList" class="space-y-2">
-                <!-- Food items will be dynamically inserted here -->
+                Total Amount: €0.00
               </div>
-              <button
-                type="button"
-                id="addItemBtn"
-                class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Add Another Item
-              </button>
+              <div class="mb-4">
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2"
+                  for="foodItems"
+                >
+                  Food Items
+                </label>
+                <div id="foodItemsList" class="space-y-2">
+                  <!-- Food items will be dynamically inserted here -->
+                </div>
+                <button
+                  type="button"
+                  id="addItemBtn"
+                  class="mt-2 mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Add Another Item
+                </button>
+              </div>
             </div>
+
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
@@ -241,6 +285,7 @@
                 placeholder="Enter customer name"
               />
             </div>
+
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
@@ -256,6 +301,7 @@
                 placeholder="Enter amount paid"
               />
             </div>
+
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
@@ -272,6 +318,7 @@
                 <option value="card">Card</option>
               </select>
             </div>
+
             <div class="mb-6">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
@@ -288,6 +335,7 @@
                 <option value="failed">Failed</option>
               </select>
             </div>
+
             <div class="flex items-center justify-between">
               <button
                 class="create-order bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -386,12 +434,16 @@
       }
 
       // Fetch the product names from the API
-      let foodItems;
+      let productsData = [];
+      let foodItems = [];
+
+      // Fetch the product objects from the API.
       fetch("https://african-store.onrender.com/api/v1/product/normal")
         .then((res) => res.json())
         .then((response) => {
-          // Extract product names from the API response.
-          foodItems = response.data.map((product) => product.name);
+          console.log(response.data);
+          productsData = response.data; // store full product objects (including price)
+          foodItems = productsData.map((product) => product.name);
           console.log("Fetched product names:", foodItems);
           // Initialize form functionality that depends on foodItems.
           initFoodForm();
@@ -402,19 +454,30 @@
 
       // Function to initialize food item form functionality
       function initFoodForm() {
-        // Add the initial food item element now that foodItems is available
+        // Create a shared datalist for all food item inputs if it doesn't already exist.
+        if (!document.getElementById("foodItemsOptions")) {
+          const dataList = document.createElement("datalist");
+          dataList.id = "foodItemsOptions";
+          dataList.innerHTML = foodItems
+            .map((item) => `<option value="${item}">`)
+            .join("");
+          // Append the datalist to the orderForm (or document.body).
+          document.getElementById("orderForm").appendChild(dataList);
+        }
+
+        // Add the initial food item element now that foodItems is available.
         document
           .getElementById("foodItemsList")
           .appendChild(createFoodItemElement());
 
-        // Event listener for adding more items
+        // Event listener for adding more food item elements.
         document.getElementById("addItemBtn").addEventListener("click", () => {
           document
             .getElementById("foodItemsList")
             .appendChild(createFoodItemElement());
         });
 
-        // Event delegation for remove buttons on food item elements
+        // Event delegation for remove buttons on food item elements.
         document
           .getElementById("foodItemsList")
           .addEventListener("click", (e) => {
@@ -425,21 +488,129 @@
       }
 
       // Function to create a food item element (depends on foodItems)
+      // Function to update the total amount display.
+      function updateTotalAmount() {
+        let total = 0;
+        // Select each food item element in the foodItemsList container.
+        const foodItemElements = document.querySelectorAll(
+          "#foodItemsList > div"
+        );
+        foodItemElements.forEach((itemDiv) => {
+          const quantityInput = itemDiv.querySelector(".quantity");
+          const priceInput = itemDiv.querySelector(".price");
+          const quantity = parseFloat(quantityInput.value) || 0;
+          const price = parseFloat(priceInput.value) || 0;
+          total += quantity * price;
+        });
+
+        document.getElementById("totalAmount").innerText =
+          "Total Amount: $" + total.toFixed(2);
+        document.getElementById("amountPaid").value = total.toFixed(2);
+      }
+
+      // Function to create a food item element.
       function createFoodItemElement() {
         const itemDiv = document.createElement("div");
         itemDiv.className = "flex items-center space-x-2 mb-2";
+
         itemDiv.innerHTML = `
-                <select class="food-item shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    ${foodItems
-                      .map((item) => `<option value="${item}">${item}</option>`)
-                      .join("")}
-                </select>
-                <input type="number" class="quantity shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Quantity" min="1" value="1">
-                <input type="number" class="price shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Price" step="0.01" min="0">
-                <button type="button" class="remove-item bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Remove</button>
-              `;
+    <!-- Input with datalist for searchable/selectable food items -->
+    <input list="foodItemsOptions"
+           class="food-item shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+           placeholder="Search or select food item">
+    
+    <!-- Quantity input -->
+    <input type="number" class="quantity shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+           placeholder="Quantity" min="1" value="1">
+    
+    <!-- Price input: read-only so admin cannot modify the price manually -->
+    <input type="number" class="price shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+           placeholder="Price" step="0.01" min="0" readonly>
+    
+    <!-- Product Image Display -->
+    <img class="product-image w-40 h-40 object-cover rounded border hidden" src="" alt="Product Image">
+    
+    <!-- Remove button -->
+    <button type="button" class="remove-item bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      Remove
+    </button>
+  `;
+
+        // Get references to the food item, quantity, price inputs, and image element.
+        const foodItemInput = itemDiv.querySelector(".food-item");
+        const quantityInput = itemDiv.querySelector(".quantity");
+        const priceInput = itemDiv.querySelector(".price");
+        const imageEl = itemDiv.querySelector(".product-image");
+
+        // Listen for input events on the food item input.
+        foodItemInput.addEventListener("input", () => {
+          const selectedValue = foodItemInput.value;
+          const product = productsData.find(
+            (p) => p.name.toLowerCase() === selectedValue.toLowerCase()
+          );
+
+          if (product) {
+            console.log(product);
+
+            function calculateFinalPrice(basePrice, discount, discountType) {
+              let finalPrice = basePrice;
+              if (discountType === "Percentage") {
+                finalPrice = basePrice - (basePrice * discount) / 100;
+              } else if (discountType === "Fixed Amount") {
+                finalPrice = basePrice - discount;
+              }
+              return finalPrice > 0 ? finalPrice : 0; // Ensure final price is not negative
+            }
+
+            const finalPrice = calculateFinalPrice(
+              product.BasePrice,
+              product.Discount,
+              product.DiscountType
+            );
+
+            priceInput.value = parseFloat(finalPrice).toFixed(2);
+
+            // Set quantity to 1 for a head start.
+            quantityInput.value = 1;
+
+            // Update and show image. Assume product.file[0] holds the image URL.
+            const imageUrl = product.file[0] || "";
+            if (imageUrl) {
+              imageEl.src = imageUrl;
+              imageEl.alt = product.name;
+              imageEl.classList.remove("hidden"); // Show image
+            } else {
+              imageEl.src = "";
+              imageEl.alt = "Product Image";
+              imageEl.classList.add("hidden"); // Hide if no image
+            }
+          } else {
+            priceInput.value = "";
+            imageEl.src = "";
+            imageEl.alt = "Product Image";
+            imageEl.classList.add("hidden"); // Hide if product not found
+          }
+          // Recalculate total amount when a food item selection is made.
+          updateTotalAmount();
+        });
+
+        // Listen for changes in the quantity input.
+        quantityInput.addEventListener("input", () => {
+          updateTotalAmount();
+        });
+
         return itemDiv;
       }
+
+      // Example: When removing an item via event delegation, recalc total.
+      document
+        .getElementById("foodItemsList")
+        .addEventListener("click", (e) => {
+          if (e.target.classList.contains("remove-item")) {
+            e.target.closest("div").remove();
+            updateTotalAmount();
+          }
+        });
 
       // Get orders from localStorage using our helper (with expiry)
       let orders = getLocalOrders();
@@ -455,9 +626,8 @@
           spinnerNode.textContent = "...";
           document.querySelector(".create-order").append(spinnerNode);
 
-          const customer_name = document
-            .getElementById("customerName")
-            .value.trim();
+          const customer_name =
+            document.getElementById("customerName").value.trim() || "None";
           const amount_paid = parseFloat(
             document.getElementById("amountPaid").value
           );
@@ -551,68 +721,68 @@
             .appendChild(createFoodItemElement());
         });
 
+      // Function to render orders from localStorage
       function renderOrders() {
         const ordersList = document.getElementById("ordersList");
         ordersList.innerHTML = "";
 
+        console.log(orders);
         orders.forEach((order) => {
+          console.log(order);
           const row = document.createElement("tr");
+
           row.innerHTML = `
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">${
-                          order.customer_name
-                        }</p>
-                        <p class="text-gray-600 whitespace-no-wrap">${new Date(
-                          order.createdAt
-                        ).toLocaleString()}</p>
-                    </td>
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <ul class="list-disc pl-5">
-                            ${order.order_items
-                              .map(
-                                (item) =>
-                                  `<li>${item.food_name} - Quantity: ${
-                                    item.quantity
-                                  }, Price: $${item.price.toFixed(2)}</li>`
-                              )
-                              .join("")}
-                        </ul>
-                    </td>
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">$${order.amount_paid.toFixed(
-                          2
-                        )}</p>
-                    </td>
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <p class="text-gray-900 whitespace-no-wrap">${
-                          order.payment_method
-                        }</p>
-                    </td>
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                            <span aria-hidden class="absolute inset-0 bg-${
-                              order.order_status === "successful"
-                                ? "green"
-                                : order.order_status === "pending"
-                                ? "yellow"
-                                : "red"
-                            }-200 opacity-50 rounded-full"></span>
-                            <span class="relative">${order.order_status}</span>
-                        </span>
-                    </td>
-                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        <button data-id="${
-                          order._id
-                        }" class="delete-order bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
-                            Delete
-                        </button>
-                    </td>
-                  `;
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p class="text-gray-900 whitespace-no-wrap">${order.customer_name}</p>
+        <p class="text-gray-600 whitespace-no-wrap">${
+          order.createdAt ? new Date(order.createdAt).toLocaleString() : ""
+        }</p>
+      </td>
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <ul class="list-disc pl-5">
+          ${order.order_items
+            .map(
+              (item) =>
+                `<li>${item.food_name} - Quantity: ${
+                  item.quantity
+                }, Price: $${parseFloat(item.price).toFixed(2)}</li>`
+            )
+            .join("")}
+        </ul>
+      </td>
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p class="text-gray-900 whitespace-no-wrap">$${parseFloat(
+          order.amount_paid
+        ).toFixed(2)}</p>
+      </td>
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <p class="text-gray-900 whitespace-no-wrap">${order.payment_method}</p>
+      </td>
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+          <span aria-hidden class="absolute inset-0 bg-${
+            order.order_status === "successful"
+              ? "green"
+              : order.order_status === "pending"
+              ? "yellow"
+              : "red"
+          }-200 opacity-50 rounded-full"></span>
+          <span class="relative">${order.order_status}</span>
+        </span>
+      </td>
+      <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+        <button data-id="${
+          order._id
+        }" class="delete-order bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+          Delete
+        </button>
+      </td>
+    `;
           ordersList.appendChild(row);
         });
       }
 
-      // Use event delegation on the orders container for deletion
+      // Deletion via event delegation on the orders container.
       document
         .getElementById("ordersList")
         .addEventListener("click", async function (e) {
