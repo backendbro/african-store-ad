@@ -168,5 +168,69 @@ filterButtons.forEach((button) => {
   });
 });
 
+// ... existing code in product.js
+
+// Event listener for export button
+const exportBtn = document.getElementById("export-btn");
+exportBtn.addEventListener("click", async () => {
+  // Create a spinner element (using a Remix Icon and Tailwind's animate-spin class)
+  const spinner = document.createElement("span");
+  spinner.classList.add("spinner", "ml-2");
+  spinner.innerHTML = `<i class="ri-loader-2-line animate-spin"></i>`;
+
+  // Disable the button and append the spinner
+  exportBtn.disabled = true;
+  exportBtn.appendChild(spinner);
+
+  try {
+    // Retrieve token (adjust as necessary)
+    const token = localStorage.getItem("token");
+
+    // Call the new export endpoint with the active filter and token authorization
+    const response = await fetch(
+      `https://african-store.onrender.com/api/v1/product-spread/export?filter=${activeFilter}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const result = await response.json();
+
+    // Remove the spinner and re-enable the button
+    exportBtn.removeChild(spinner);
+    exportBtn.disabled = false;
+
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Export Successful",
+        html: `Your product export has been completed successfully. Please <a href="${result.spreadsheetUrl}" target="_blank">click here</a> to view the spreadsheet.`,
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Export Failed",
+        text: "Error exporting products: " + result.message,
+        confirmButtonText: "Ok",
+      });
+    }
+  } catch (err) {
+    // Remove the spinner and re-enable the button on error
+    exportBtn.removeChild(spinner);
+    exportBtn.disabled = false;
+    console.error("Network error:", err);
+    Swal.fire({
+      icon: "error",
+      title: "Network Error",
+      text: "Network error exporting products",
+      confirmButtonText: "Ok",
+    });
+  }
+});
+
 updateActiveFilter(activeFilter);
 fetchProducts();

@@ -194,29 +194,28 @@
             <!-- Filters -->
             <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                 <div class="flex flex-wrap gap-4">
-                    <div class="flex-1 min-w-[200px]">
-                        <input type="search" id="searchProduct" placeholder="Search products..."
-                            class="w-full px-3 py-2 border rounded-md">
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button id="filter-all" data-filter="all" class="filter-btn px-3 py-2 bg-gray-100 text-gray-900 rounded-md text-sm font-medium">
-                            All Products
-                          </button>
-                          <button id="filter-new" data-filter="new" class="filter-btn px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">
-                            New Stock
-                          </button>
-                          <button id="filter-lowStock" data-filter="low" class="filter-btn px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">
-                            Low Stock
-                          </button>
-                        <button
-                            class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium flex items-center gap-2">
-                            <i class="ri-filter-3-line"></i>
-                            Filters
-                        </button>
-                    </div>
+                  <div class="flex-1 min-w-[200px]">
+                    <input type="search" id="searchProduct" placeholder="Search products..."
+                      class="w-full px-3 py-2 border rounded-md">
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <button id="filter-all" data-filter="all" class="filter-btn px-3 py-2 bg-gray-100 text-gray-900 rounded-md text-sm font-medium">
+                      All Products
+                    </button>
+                    <button id="filter-new" data-filter="new" class="filter-btn px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">
+                      New Stock
+                    </button>
+                    <button id="filter-lowStock" data-filter="low" class="filter-btn px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium">
+                      Low Stock
+                    </button>
+                    <button id="export-btn" class="px-3 py-2 text-gray-500 hover:bg-gray-100 rounded-md text-sm font-medium flex items-center gap-2">
+                        <i class="ri-export-box-line"></i>
+                      Export
+                    </button>
+                  </div>
                 </div>
-            </div>
-
+              </div>
+              
             <!-- Products Table -->
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
