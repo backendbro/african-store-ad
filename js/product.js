@@ -107,7 +107,7 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
   // If discount type is not "no discount", then discount must be > 0.
   if (
     discountType.value.toLowerCase() !== "no discount" &&
-    parseFloat(discount.value) > 0
+    parseFloat(discount.value) <= 0
   ) {
     Swal.fire(
       "Error",
