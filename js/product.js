@@ -71,6 +71,16 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
   spinner.classList.add("spinner");
   button.appendChild(spinner);
 
+  // Default discount fields if not provided
+  if (!discountType.value.trim()) {
+    console.log(discountType.value);
+    discountType.value = "no-discount";
+  }
+
+  if (!discount.value.trim()) {
+    discount.value = "0";
+  }
+
   // Get all selected category spans
   const spans = document.querySelectorAll("#selectedCategories span[data-id]");
   let spanData = [];
@@ -81,14 +91,11 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
     });
   });
 
-  // Validate required fields
+  // Validate required fields (discount fields removed)
   if (
     !productName.value.trim() ||
-    !productDescription.value.trim() ||
     !basePrice.value.trim() ||
     !StockQuantity.value.trim() ||
-    !discount.value.trim() ||
-    !discountType.value.trim() ||
     !quantity.value.trim()
   ) {
     Swal.fire("Error", "Please fill out all required fields.", "error");
@@ -96,19 +103,12 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
     return;
   }
 
-  // Validate category: exactly one category must be selected
-  if (spanData.length !== 1) {
-    Swal.fire("Error", "Please select exactly one category.", "error");
-    spinner.remove();
-    return;
-  }
-
-  // Validate discount:
-  // If discount type is not "no discount", then discount must be > 0.
+  // Validate discount: if discount type is not "no discount", then discount must be > 0.
   if (
-    discountType.value.toLowerCase() !== "no discount" &&
+    discountType.value.toLowerCase() !== "no-discount" &&
     parseFloat(discount.value) <= 0
   ) {
+    console.log(discountType.value);
     Swal.fire(
       "Error",
       "Please enter a valid discount value for the selected discount type.",
@@ -119,8 +119,9 @@ document.getElementById("submitButton").addEventListener("click", async (e) => {
   }
 
   // Append text fields to the existing global FormData
+
   formData.append("name", productName.value);
-  formData.append("description", productDescription.value);
+  formData.append("description", productDescription.value.trim() || "N/A");
   formData.append("BasePrice", basePrice.value);
   formData.append("StockQuantity", StockQuantity.value);
   formData.append("Discount", discount.value);
